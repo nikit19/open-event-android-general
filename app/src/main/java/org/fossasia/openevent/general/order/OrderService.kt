@@ -18,4 +18,8 @@ class OrderService(private val orderApi: OrderApi, private val orderDao: OrderDa
                     order
                 }
     }
+    fun orderUser(): Single<List<OrderUnderUser>> {
+        return orderApi.ordersUnderUser()
+
+    }
 }

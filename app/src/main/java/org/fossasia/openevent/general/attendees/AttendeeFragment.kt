@@ -127,6 +127,13 @@ class AttendeeFragment : Fragment() {
 
         if (attendeeFragmentViewModel.isLoggedIn()) {
 
+            attendeeFragmentViewModel.orderUser()
+            attendeeFragmentViewModel.idList.observe(this, Observer {
+                Toast.makeText(context, "${it?.size}", Toast.LENGTH_LONG).show()
+
+
+            })
+
             attendeeFragmentViewModel.loadUser(attendeeFragmentViewModel.getId())
             attendeeFragmentViewModel.loadEvent(id)
 

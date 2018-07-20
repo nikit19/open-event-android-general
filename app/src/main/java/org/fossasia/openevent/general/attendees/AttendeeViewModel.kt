@@ -13,6 +13,7 @@ import org.fossasia.openevent.general.event.EventId
 import org.fossasia.openevent.general.event.EventService
 import org.fossasia.openevent.general.order.Order
 import org.fossasia.openevent.general.order.OrderService
+import org.fossasia.openevent.general.order.OrderUnderUser
 import org.fossasia.openevent.general.ticket.Ticket
 import org.fossasia.openevent.general.ticket.TicketService
 import timber.log.Timber
@@ -29,6 +30,9 @@ class AttendeeViewModel(private val attendeeService: AttendeeService, private va
     var totalAmount = MutableLiveData<Float>()
     var totalQty = MutableLiveData<Int>()
     val qtyList = MutableLiveData<ArrayList<Int>>()
+    var orderUnderUser = MutableLiveData<List<OrderUnderUser>>()
+    var idList = MutableLiveData<ArrayList<Long>>()
+
 
     fun getId() = authHolder.getId()
 
@@ -147,6 +151,35 @@ class AttendeeViewModel(private val attendeeService: AttendeeService, private va
                 }))
     }
 
+    fun orderUser() {
+        compositeDisposable.add(orderService.orderUser()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    progress.value = true
+                }.doFinally {
+                    progress.value = false
+                }.subscribe({
+                    orderUnderUser.value = it
+                    var a = ArrayList<Long>()
+                    it.forEach {
+                        /* it.event?.?.let { it1 -> a?.add(it1) }
+                         Timber.d("Nikit ${it.event?.id}")*/
+                        /* it.event?.forEach {
+                             a.add(it)
+                         }
+                         Timber.d("Nikit ${it.event[]}")*/
+
+                    }
+                    idList.value = a
+                    Timber.d("orders under user ${a?.size}")
+                }, {
+                    message.value = "Failed  to list Orders under a user"
+                    Timber.d(it, "Failed  to list Orders under a user ")
+
+                }))
+    }
+
     fun loadEvent(id: Long) {
         if (id.equals(-1)) {
             throw IllegalStateException("ID should never be -1")
@@ -161,6 +194,7 @@ class AttendeeViewModel(private val attendeeService: AttendeeService, private va
                     message.value = "Error fetching event"
                 }))
     }
+
 
     fun loadUser(id: Long) {
         if (id == -1L) {
