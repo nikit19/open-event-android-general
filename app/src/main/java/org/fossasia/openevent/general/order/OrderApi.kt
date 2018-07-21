@@ -15,7 +15,7 @@ interface OrderApi {
     fun chargeOrder(@Path("orderIdentifier") orderIdentifier: String, @Body charge: Charge): Single<Charge>
 
 
-    @GET("/v1/users/40/orders?filter=[{\"name\":\"payment-mode\",\"op\":\"eq\",\"val\":\"free\"}]&include=event,attendees&fields[event]=id&fields[attendees]=id")
+    @GET("/v1/users/40/orders?filter=[{\"name\":\"payment-mode\",\"op\":\"eq\",\"val\":\"free\"}]&include=event")
     fun ordersUnderUser(): Single<List<OrderUnderUser>>
 
 }
